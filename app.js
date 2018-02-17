@@ -20,6 +20,73 @@ app.set('views', './');
 app.set('view engine', 'pug');
 app.use(express.static("public"));
 
+// Setting up the tables
+var Student = sequelize.define('student', {
+	firstname: Sequelize.STRING,
+	lastname: Sequelize.STRING,
+	birthdate: Sequelize.STRING,
+	gender: Sequelize.STRING,
+	parentEmail: Sequelize.STRING
+});
+
+var Teacher = sequelize.define('teacher', {
+	firstname: Sequelize.STRING,
+	lastname: Sequelize.STRING,
+	email: Sequelize.STRING,
+	password: Sequelize.STRING
+});
+
+var Group = sequelize.define('group', {
+	groupName: Sequelize.STRING
+})
+
+var Lesson = sequelize.define('lesson', {
+	homework: Sequelize.STRING,
+	attendance: Sequelize.STRING,
+	date: Sequelize.DATEONLY,
+	behaviour: Sequelize.STRING,
+	nextHomework: Sequelize.STRING
+})
+
+// Setting up the model by linking the tables to each other
+Student.belongsTo(Group);
+Student.hasMany(Lesson);
+Student.belongsTo(Teacher);
+Group.hasMany(Student);
+Group.hasMany(Lesson);
+Group.hasOne(Teacher);
+Teacher.belongsTo(Group);
+Teacher.hasMany(Lesson);
+Teacher.hasMany(Student);
+Lesson.belongsTo(Group);
+Lesson.belongsTo(Teacher);
+Lesson.belongsTo(Student)
+
+//Initiliaze sequelize database
+sequelize.sync({force:false}) 
+	.then(()=>{
+		Teacher.findOne({
+			where: {
+				email: "youssef@ouirini.com"
+			}
+		}).then((teacher)=>{
+			if (teacher === null) {
+				bcrypt.hash("pizza", null, null, (err,hash)=>{
+					if (err) {
+						throw err
+					}
+					return Teacher.create({
+						firstname: "Youssef",
+						lastname: "Ouirini",
+						email: "youssef@ouirini.com",
+						password: hash
+					})
+				});
+			} 
+			return
+		}).then().catch(error=>{console.log(error)})
+	})
+
 // Creates session when user logs in
 app.use(session({
 	secret: `${process.env.SECRET_SESSION}`,
@@ -36,6 +103,13 @@ app.get('/',  (req,res)=>{
 		user: req.session.user
 	});
 });
+
+app.post('/login', (req,res)=>{
+	Teacher.findOne({
+
+	})
+	res.send("Pizza is tha best!")
+})
 
 var server = app.listen(3000, function() {
   console.log('The server is running at http//:localhost:' + server.address().port)

@@ -2,5 +2,16 @@ head
 	title Quba App
 body
 	p Quba App
+	h2 Login Pagina
+	h2 Vul je gegevens in om in te loggen
+	h3
+		form(action='/login' method='post')
+			input(id='email' name='email' placeholder='Email' maxlength='35' required)
+			br
+			br
+			input(type='password' id='password' name='password' maxlength='35' placeholder='Wachtwoord' required)
+			br
+			br
+			input(type='submit' value='Login' id='submit')
 	footer
 		p &copy; 2018 Quba App
