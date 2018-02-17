@@ -1,0 +1,29 @@
+{
+  "name": "quba_app",
+  "version": "1.0.0",
+  "description": "App for managing class administration",
+  "main": "app.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/YoussefOuirini/QubaApp.git"
+  },
+  "keywords": [
+    "Quba",
+    "App",
+    "Class",
+    "Lessons",
+    "Teacher",
+    "Students",
+    "Homework",
+    "Administration"
+  ],
+  "author": "Youssef Ouirini",
+  "license": "Apache-2.0",
+  "bugs": {
+    "url": "https://github.com/YoussefOuirini/QubaApp/issues"
+  },
+  "homepage": "https://github.com/YoussefOuirini/QubaApp#readme"
+}
