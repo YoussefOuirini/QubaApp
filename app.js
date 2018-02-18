@@ -4,15 +4,21 @@ const app = express();
 const bodyParser = require('body-parser');
 const Sequelize = require('sequelize');
 const session= require('express-session');
+const bcrypt= require('bcrypt-nodejs');
+
+//Name of the database in postgressql, process.env.POSTGRES_DB did not get recognized
+const databaseName = 'quba_app'
 
 // Setting up the link to the database.
-const sequelize = new Sequelize(process.env.POSTGRES_DB, process.env.POSTGRES_USER, process.env.POSTGRES_PASSWORD, {
+const sequelize = new Sequelize(databaseName, process.env.POSTGRES_USER, process.env.POSTGRES_PASSWORD, {
 	host: 'localhost',
 	dialect: 'postgres',
 	define: {
 		timestamps: true
 	}
 })
+
+// const sequelize = new Sequelize('postgres://YoussefOuirini:18061992@localhost/quba_app');
 
 app.use('/', bodyParser());
 
@@ -63,7 +69,7 @@ Lesson.belongsTo(Teacher);
 Lesson.belongsTo(Student)
 
 //Initiliaze sequelize database
-sequelize.sync({force:false}) 
+sequelize.sync({force:false})
 	.then(()=>{
 		Teacher.findOne({
 			where: {
@@ -82,7 +88,7 @@ sequelize.sync({force:false})
 						password: hash
 					})
 				});
-			} 
+			}
 			return
 		}).then().catch(error=>{console.log(error)})
 	})
@@ -104,11 +110,30 @@ app.get('/',  (req,res)=>{
 	});
 });
 
-app.post('/login', (req,res)=>{
+app.post('/', (req,res)=>{
 	Teacher.findOne({
-
+		where: {
+			email: req.body.email
+		}
+	}).then((teacher)=>{
+		if ((teacher!==null)) {
+			bcrypt.compare(req.body.password, teacher.password, (err, data)=>{
+				if (err) {
+					throw err;
+				} else {
+					if(teacher !== null && data== true) {
+						req.session.teacher = teacher;
+						res.redirect('/teacher');
+					} else {
+						res.render("public/views/index", {message: "Verkeerde email of wachtwoord!"});
+					}
+				}
+			})
+		} else {
+				res.render("public/views/index", {message: "Verkeerde email of wachtwoord!"});
+				return;
+			}
 	})
-	res.send("Pizza is tha best!")
 })
 
 var server = app.listen(3000, function() {

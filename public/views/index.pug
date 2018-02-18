@@ -4,8 +4,9 @@ body
 	p Quba App
 	h2 Login Pagina
 	h2 Vul je gegevens in om in te loggen
+	h2 #{message}
 	h3
-		form(action='/login' method='post')
+		form(action='/' method='post')
 			input(id='email' name='email' placeholder='Email' maxlength='35' required)
 			br
 			br
