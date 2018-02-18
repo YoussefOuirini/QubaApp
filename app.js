@@ -18,8 +18,6 @@ const sequelize = new Sequelize(databaseName, process.env.POSTGRES_USER, process
 	}
 })
 
-// const sequelize = new Sequelize('postgres://YoussefOuirini:18061992@localhost/quba_app');
-
 app.use('/', bodyParser());
 
 app.set('views', './');
